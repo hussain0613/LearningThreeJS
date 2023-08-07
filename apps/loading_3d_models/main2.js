@@ -19,13 +19,9 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const loader = new GLTFLoader();
 
-// Optional: Provide a DRACOLoader instance to decode compressed mesh data
-const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath( '/examples/jsm/libs/draco/' );
-loader.setDRACOLoader( dracoLoader );
 
 // Add lights to the scene
-const ambientLight = new THREE.AmbientLight(0xffffff, 100);
+const ambientLight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientLight);
 /*
 params: 
@@ -33,36 +29,35 @@ params:
     2. light intensity (optional, but can't see the model if not given, but can see the cube without any problem) 
 */
 
-const directionalLight = new THREE.DirectionalLight(0xff00aa, 50);
-directionalLight.position.set(10, 10, 20).normalize();
+// const directionalLight = new THREE.DirectionalLight(0xff00aa, 50);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 20);
+directionalLight.position.set(5, 5, 5).normalize();
 scene.add(directionalLight);
 
-const pointLight = new THREE.PointLight(0xaa00ff, 5, 50); // parameters: color, intensity, distance
-pointLight.position.set(10, 10, 20); // Set the position of the light
+// // const pointLight = new THREE.PointLight(0xaa00ff, 5, 50); // parameters: color, intensity, distance
+const pointLight = new THREE.PointLight(0xffffff, 5, 50);
+pointLight.position.set(5, 5, 5); // Set the position of the light
 scene.add(pointLight);
 
 
-loader.load( 
-    'public/models_gltf/free_1975_porsche_911_930_turbo/scene.gltf', // file path
-    function ( gltf ) { // fn to be called once loaded
-	    console.log("Loading done!")
-        scene.add( gltf.scene );
-        console.log("GLTF model added to scene!")
-        // gltf.scene.scale.set(2, 2, 2); // scales the model
-        
-        // gltf.animations; // Array<THREE.AnimationClip>
-		// gltf.scene; // THREE.Group
-		// gltf.scenes; // Array<THREE.Group>
-		// gltf.cameras; // Array<THREE.Camera>
-		// gltf.asset; // Object
+loader.load(
+    'public/models_gltf/all_cars_pack/scene.gltf',
+    function (gltf) {
+        console.log(gltf);
+        console.log(gltf.scene.children[0].children[0].children[0])
+        var cars = gltf.scene.children[0].children[0].children[0].children;
+        console.log(cars[0])
+        // scene.add(gltf.scenes[0])
+        scene.add(cars[0]);
+        scene.add(cars[1])
     },
-    function ( xhr ) { // fn to be called while loading is in progress
-		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-	}, 
+    function (xhr){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    },
     function ( error ) { // fn to be called if loading encounters some error
-	    console.error( error );
+        console.error( error );
     } 
-);
+)
 
 
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
