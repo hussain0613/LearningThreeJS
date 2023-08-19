@@ -1,4 +1,4 @@
-export { key_bindings, key_states, onKeyDownHandler };
+export { key_bindings, key_states, onKeyDownHandler, onKeyUpHandler };
 
 const key_bindings = {
     38: "up",
@@ -35,6 +35,17 @@ function onKeyDownHandler(event) {
     // update key states
     if (key_bindings[event.keyCode] != undefined) {
         key_states[key_bindings[event.keyCode]] = true;
+    }
+
+    console.log(event.keyCode);
+    console.log(key_states);
+}
+
+
+function onKeyUpHandler(event) {
+    // update key states
+    if (key_bindings[event.keyCode] != undefined) {
+        key_states[key_bindings[event.keyCode]] = false;
     }
 
     console.log(event.keyCode);
