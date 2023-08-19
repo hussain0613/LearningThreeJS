@@ -60,9 +60,13 @@ function animate() {
 
     if (key_states["up"]) {
         car_speed += car_acceleration;
+        if(key_states["shift"])
+            car_speed += car_acceleration;
     }
     if (key_states["down"]) {
         car_speed -= car_acceleration;
+        if(key_states["shift"])
+            car_speed -= car_acceleration;
     }
 
     if (key_states["space"]) {
@@ -74,9 +78,9 @@ function animate() {
             car_speed = 0;
     }
 
-    if (key_states["shift"]) {
-        car_speed += 2*car_acceleration;
-    }
+    // if (key_states["shift"]) {
+    //     car_speed += 2*car_acceleration;
+    // }
 
     if (car){
         if (key_states["left"]) {
