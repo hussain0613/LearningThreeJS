@@ -6,10 +6,11 @@ import { key_bindings, key_states, onKeyDownHandler } from './utils';
 export { scene, camera, renderer, loader, cars };
 
 var cars = [];
+var cars_gltf;
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.set( 5, 5, 5 );
+const camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+camera.position.set( 2, 5, -5 );
 camera.lookAt( 0, 0, 0 );
 
 
@@ -35,13 +36,28 @@ pointLight.position.set(5, 5, 5);
 scene.add(pointLight);
 
 
+// add plane
+// const planeGeometry = new THREE.PlaneGeometry( 10, 10, 10 );
+// const planeMaterial = new THREE.MeshBasicMaterial( {color: 0x555555, side: THREE.DoubleSide} );
+// const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+// plane.rotation.x = Math.PI/2;
+// scene.add( plane );
+
+const plane = new THREE.Plane( new THREE.Vector3( 0, 1, 0 ), 0 );
+const helper = new THREE.PlaneHelper( plane, 1000, 0x555555 );
+scene.add( helper );
+
+
+
 loader.load(
     'public/models_gltf/all_cars_pack/scene.gltf',
     function (gltf) {
         console.log(gltf);
         console.log(gltf.scene.children[0].children[0].children[0])
         cars = gltf.scene.children[0].children[0].children[0].children;
-        scene.add(cars[0]);
+        // scene.add(cars[0]);
+        cars_gltf = gltf;
+        scene.add(gltf.scene);
         console.log(cars);
     },
     function (xhr){
@@ -82,7 +98,7 @@ function animate() {
             cars[0].rotation.y -= 0.01;
         }
     
-        cars[0].position.x += car_speed; //* Math.sin(cars[0].rotation.y);
+        cars[0].position.y += car_speed; //* Math.sin(cars[0].rotation.y);
         // console.log(cars[0].position);
     }
     else{
