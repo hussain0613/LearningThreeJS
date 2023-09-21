@@ -87,18 +87,19 @@ function randinrnge(min, max){
     return Math.random() * (max - min) + min;
 }
 
+const max_obs_mass = 50000.0;
 function create_obstacel(mass = undefined){
     if (mass === undefined){
-        mass = randinrnge(0, 500);
+        mass = randinrnge(0, max_obs_mass);
     }
 
     var w = randinrnge(.1, 5);
     var h = randinrnge(.1, 5);
     var d = randinrnge(.1, 5);
 
-    var x = randinrnge(-100, 100);
+    var x = randinrnge(-500, 500);
     var y = 0; //randinrnge(0, 10);
-    var z = randinrnge(-100, 100);
+    var z = randinrnge(-500, 500);
 
 
     const obst = new MeshBody({
@@ -110,19 +111,27 @@ function create_obstacel(mass = undefined){
     world.addBody(obst); // add to the world
     
     obst.position.set(x, y, z); // x, y, z
-    obst.createMesh(new THREE.BoxGeometry(2*w, 2*h, 2*d), new THREE.MeshPhysicalMaterial({ color: 0x00ffff }), scene);
+    var color_coeff = 1 - ((mass)/ max_obs_mass);
+    var color =  new THREE.Color(0x00ffff);
+    color.r *= color_coeff;
+    color.g *= color_coeff;
+    color.b *= color_coeff;
+    obst.createMesh(new THREE.BoxGeometry(2*w, 2*h, 2*d), new THREE.MeshPhysicalMaterial({ color:  color}), scene);
 }
 
 var obstacles = [];
-for (var i = 0; i < 10; i++){
+for (var i = 0; i < 20; i++){
     var obs = create_obstacel();
+    obstacles.push(obs);
+
+    var obs = create_obstacel(randinrnge(0, 500.0)); // a chance for a light obstacles
     obstacles.push(obs);
 }
 
 
 // adding a car body
 const car = new MeshBody({
-    mass: 20, // kg
+    mass: 2000, // kg
     shape: new CANNON.Box(new CANNON.Vec3(1, 0.5, 2.5)), // 2m x 1m x 5m
     material: new CANNON.Material(), // this is the default material
 });
@@ -138,7 +147,7 @@ const vehicle = new CANNON.RigidVehicle({ chassisBody: car });
 // adding wheels
 // wheel body
 const wheel_body_specs = {
-    mass: 1, // kg
+    mass: 15, // kg
     // shape: new CANNON.Cylinder(0.5, 0.5, 0.5, 20), // radiusTop, radiusBottom, height, numSegments
     shape: new CANNON.Sphere(0.5), // radius
     material: new CANNON.Material("wheel"), // this is the default material
@@ -225,8 +234,8 @@ controls.minDistance = 5; // set the min distance of the controls
 // const cannonDebugger = new CannonDebugger(scene, world, { color: 0x00ffff });
 
 
-const maxSteerVal = 1;
-const maxForce = 50;
+const maxSteerVal = .5;
+const maxForce = 700;
 
 
 function animate() {
