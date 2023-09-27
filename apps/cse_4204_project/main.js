@@ -172,16 +172,40 @@ wheelBody4.angularDamping = 0.4; // less 'slippery' wheels
 // adding a wheel mesh
 // const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 20);
 const wheelGeometry = new THREE.SphereGeometry(0.5);
-const wheelMaterial1 = new THREE.MeshPhysicalMaterial({ color: 0xaaaaaa });
-const wheelMaterial2 = new THREE.MeshPhysicalMaterial({ color: 0xaaaaaa });
-const wheelMaterial3 = new THREE.MeshPhysicalMaterial({ color: 0x555555 });
-const wheelMaterial4 = new THREE.MeshPhysicalMaterial({ color: 0x555555 });
+const wheelMaterial1 = new THREE.MeshPhysicalMaterial({metalness: .5}); // { color:  0xaaaaaa} 
+const wheelMaterial2 = new THREE.MeshPhysicalMaterial({metalness: .5}); // { color:  0xaaaaaa} 
+const wheelMaterial3 = new THREE.MeshPhysicalMaterial({metalness: 1.0}); // { color:  0x555555} 
+const wheelMaterial4 = new THREE.MeshPhysicalMaterial({metalness: 1.0}); // { color:  0x555555}
+
 
 
 wheelBody1.createMesh(wheelGeometry, wheelMaterial1, scene);
 wheelBody2.createMesh(wheelGeometry, wheelMaterial2, scene);
 wheelBody3.createMesh(wheelGeometry, wheelMaterial3, scene);
 wheelBody4.createMesh(wheelGeometry, wheelMaterial4, scene);
+
+
+const front_wheel_texture = new THREE.TextureLoader().load('OIG.jpeg', function(texture){
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    
+    
+    wheelBody1.mesh.material.map = texture;
+    wheelBody1.mesh.material.needsUpdate = true;
+
+    wheelBody2.mesh.material.map = texture;
+    wheelBody2.mesh.material.needsUpdate = true;
+
+    wheelBody3.mesh.material.map = texture;
+    wheelBody3.mesh.material.needsUpdate = true;
+
+    wheelBody4.mesh.material.map = texture;
+    wheelBody4.mesh.material.needsUpdate = true;    
+
+    console.log("wheel texture loaded");
+});
+
 
 
 const wheel_rot_axis1 = new CANNON.Vec3(1, 0, 0); // axis of rotation
